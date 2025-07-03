@@ -1,7 +1,7 @@
 "use client";
 
 import { Jersey_25 } from "next/font/google";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AddMoney from "./components/AddMoney";
 import Winning from "./components/Winning";
 import { Wallet } from 'lucide-react';
@@ -67,11 +67,11 @@ export default function Home() {
     [key: number]: "bomb" | "gem";
   }>({});
 
-  //AUDIOS USED 
-  let betSound = new Audio('betButtonSound.mp3');
-  let bombSound = new Audio('bombSound.mp3');
-  let gemSound = new Audio('gemSound.mp3');
-  let cashoutSound = new Audio('cashoutSound.mp3');
+  //AUDIOS USED
+  const betSound = useRef<HTMLAudioElement | null>(null);
+  const bombSound = useRef<HTMLAudioElement | null>(null);
+  const gemSound = useRef<HTMLAudioElement | null>(null);
+  const cashoutSound = useRef<HTMLAudioElement | null>(null);
 
   //CALCULATING THE NUMBER OF GEMS
   const gems = 25 - Number(bomb);
@@ -79,6 +79,12 @@ export default function Home() {
   //SETTING ISCLIENT TO TRUE WHEN THE COMPONENT LOADS ON CLIENT SIDE
   useEffect(() => {
     setIsClient(true);
+    if (typeof window !== 'undefined') {
+      betSound.current = new Audio('betButtonSound.mp3');
+      bombSound.current = new Audio('bombSound.mp3');
+      gemSound.current = new Audio('gemSound.mp3');
+      cashoutSound.current = new Audio('cashoutSound.mp3');
+    }
   }, []);
 
   //USE EFFECT TO SET THE NEW AMOUNT IN LOCAL STORAGE WHENEVER THE AMOUNT IN WALLET CHANGES
@@ -184,7 +190,7 @@ export default function Home() {
         setMaxWin(false);
         console.log("Number of gems:", gems);
         setWinAmount(0);
-        betSound.play();        
+        betSound.current?.play();
       }
       else{
         setGreaterBet(true);
@@ -201,7 +207,7 @@ export default function Home() {
     setWinAmount(Number(calculatedWinAmount));
 
     //WHEN CASHOUT BUTTON CLICKED, THIS SOUND PLAYS
-    cashoutSound.play();
+      cashoutSound.current?.play();
   };
 
   const clickingMine = (index: any) => {
@@ -316,15 +322,15 @@ export default function Home() {
   const mineClicked = (index: number) => {
     console.log("Clicked index:", index);
     console.log("Bomb count array:", bombCount);
-    if (bombCount.includes(index)) {
-      setClickedIndices((prev) => ({ ...prev, [index]: "bomb" }));
-      console.log("Bomb Clicked");
-      bombSound.play();
-    } else {
+      if (bombCount.includes(index)) {
+        setClickedIndices((prev) => ({ ...prev, [index]: "bomb" }));
+        console.log("Bomb Clicked");
+        bombSound.current?.play();
+      } else {
       setClickedIndices((prev) => ({ ...prev, [index]: "gem" }));
       console.log("Gem Clicked");
-      setGemCount( prev => prev + 1 );
-      gemSound.play();
+        setGemCount( prev => prev + 1 );
+        gemSound.current?.play();
 
       if( gemCount === gems ){
         maxWinFunction();
