@@ -486,7 +486,7 @@ export default function Home() {
     if (gemCount === gems) {
       maxWinFunction();
     }
-  }, [gemCount]);
+  }, [gemCount, gems, maxWinFunction]);
 
   //array of length 25 to display all div boxes through loop
   const divs = Array.from({ length: 25 });
