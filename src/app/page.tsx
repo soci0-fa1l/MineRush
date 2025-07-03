@@ -2,6 +2,7 @@
 
 import { Jersey_25 } from "next/font/google";
 import { useEffect, useState, useRef } from "react";
+import Image from "next/image";
 import AddMoney from "./components/AddMoney";
 import Winning from "./components/Winning";
 import { Wallet } from 'lucide-react';
@@ -879,13 +880,15 @@ export default function Home() {
                     >
                       {isClicked && (
                         // Showing image of gem or bomb according to the index clicked
-                        <img
+                        <Image
                           src={
                             clickedIndices[index] === "bomb"
-                              ? "bomb.png"
-                              : "gems.png"
+                              ? "/bomb.png"
+                              : "/gems.png"
                           }
                           alt={clickedIndices[index]}
+                          width={55}
+                          height={55}
                           className={`${
                             clickedIndices[index] === "bomb"
                               ? "mr-1 sm:mr-1 md:mr-1 lg:mr-1 xl:mr-1 2xl:mr-1 image-size"
